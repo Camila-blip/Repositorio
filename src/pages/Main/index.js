@@ -6,22 +6,23 @@ import api from "../../services/api.js";
 
 export default function Main(){
 
-    const [newRepo, setnewRepo] = useState('');
+    const [newRepo, setNewRepo] = useState('');
     const [repositorios, setRepositorios] = useState([]);
     const [loading, setLoading] = useState(false);
     const [alert, setAlert] = useState(null);
 
     //Buscar
     useEffect(()=>{
-        const repoStorage = localStorage.getItem("repos");
-        if(repoStorage){
+        const repoStorage = localStorage.getItem('repos');
+        if(repoStorage !== '[]'){
+            console.log(repoStorage)
             setRepositorios(JSON.parse(repoStorage));
         }
     },[]);
 
     //Salvar alterações
     useEffect(()=>{
-        localStorage.setItem("repos", JSON.stringify(repositorios));
+        localStorage.setItem('repos',  JSON.stringify(repositorios));
     },[repositorios]);
 
     const handleSubmit = useCallback((e) => {
@@ -48,13 +49,14 @@ export default function Main(){
                 }
     
                 setRepositorios([...repositorios, data]);
-                setnewRepo('');
-
+                setNewRepo('');
             }catch(error){
                 setAlert(true);
                 console.log(error);
             }finally{
                 setLoading(false);
+               
+
             }
            
         }
@@ -64,12 +66,13 @@ export default function Main(){
     }, [newRepo, repositorios]);
 
     function handleinputChange(e){
-        setnewRepo(e.target.value);
+        setNewRepo(e.target.value);
         setAlert(null);
     }
 
     const handleDelete = useCallback((repo)=>{
         const find = repositorios.filter(r => r.name !== repo);
+        console.log(find)
         setRepositorios(find);
     },[repositorios]);
 
